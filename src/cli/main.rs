@@ -10,6 +10,7 @@ extern crate serde_json;
 
 extern crate dreammaker as dm;
 #[macro_use] extern crate dmm_tools;
+#[cfg(feature="use_flame")] extern crate flame;
 
 use std::fmt;
 use std::collections::HashMap;
@@ -35,9 +36,9 @@ fn main() {
 
     run(&opt, &opt.command, &mut context);
 
-    #[cfg(feature="flame")] {
+    #[cfg(feature="use_flame")] {
         println!("Saving flame graph");
-        flame::dump_html(&mut std::io::BufWriter::new(std::fs::File::create(format!("{}/flame-graph.html", opt.output)).unwrap())).unwrap();
+        flame::dump_html(&mut std::io::BufWriter::new(std::fs::File::create(format!("{}/flame-graph.html", opt.flame_output_dir)).unwrap())).unwrap();
     }
 
     std::process::exit(context.exit_status.into_inner() as i32);
@@ -88,6 +89,10 @@ struct Opt {
 
     #[structopt(subcommand)]
     command: Command,
+
+    #[cfg(feature="use_flame")]
+    #[structopt(short="-f", "--flame-output-dir", default_value=".")]
+    flame_output_dir: String,
 }
 
 // ----------------------------------------------------------------------------

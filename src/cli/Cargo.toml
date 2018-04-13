@@ -16,7 +16,8 @@ serde_json = "1.0.9"
 rayon = "1.0.0"
 dreammaker = { path = "../dreammaker" }
 dmm-tools = { path = "../tools" }
+flame = { version = "0.2.2", optional = true }
 
 [features]
-flame = ["dmm-tools/flame"]
+use_flame = ["dmm-tools/flame", "flame"]
 xml = ["dreammaker/xml-rs"]

@@ -10,7 +10,7 @@ extern crate rand;
 
 #[cfg(feature="flame")] extern crate flame;
 
-#[macro_use] mod utils;
+#[macro_use] pub mod utils;
 pub mod dmi;
 pub mod dmm;
 pub mod icon_cache;
