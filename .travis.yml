@@ -7,10 +7,11 @@ branches:
 env:
   - BUILD_POSTFIX: "--all"
   - BUILD_POSTFIX: "--all --release"
+  - FEATURES_POSTFIX: "--features xml"
 cache: cargo
 install:
   - rustc -Vv
   - cargo -V
 script:
-  - cargo build --verbose $BUILD_POSTFIX
-  - cargo test --verbose $BUILD_POSTFIX
+  - cargo build --verbose $BUILD_POSTFIX $FEATURES_POSTFIX
+  - cargo test --verbose $BUILD_POSTFIX $FEATURES_POSTFIX

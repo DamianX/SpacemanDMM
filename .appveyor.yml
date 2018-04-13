@@ -8,6 +8,7 @@ environment:
   matrix:
     - BUILD_POSTFIX: "--all"
     - BUILD_POSTFIX: "--all --release"
+    - FEATURES_POSTFIX: "--features xml"
 shallow_clone: true
 image: Visual Studio 2017
 cache:
@@ -20,5 +21,5 @@ install:
   - rustc -Vv
   - cargo -V
 build_script:
-  - cargo build --verbose %BUILD_POSTFIX%
-  - cargo test --verbose %BUILD_POSTFIX%
+  - cargo build --verbose %BUILD_POSTFIX% %FEATURES_POSTFIX%
+  - cargo test --verbose %BUILD_POSTFIX% %FEATURES_POSTFIX%
