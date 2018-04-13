@@ -46,7 +46,7 @@ fn check_parser() {
         println!("\n--------\nSuccess!\n--------");
         #[cfg(feature="xml")] {
             println!("Outputting objtree.xml");
-            _tree.to_xml("objtree.xml".as_ref()).unwrap();
+            _tree.to_xml("objtree.xml").unwrap();
         }
         #[cfg(not(feature="xml"))] {
             println!("Enable --feature xml to output objtree.xml");

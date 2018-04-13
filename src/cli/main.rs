@@ -221,7 +221,7 @@ fn run(opt: &Opt, command: &Command, context: &mut Context) {
                 Ok(()) => println!("saved {}", output),
                 Err(e) => {
                     println!("i/o error saving {}:\n{}", output, e);
-                    context.exit_status = 1;
+                    context.exit_status.fetch_add(1, Ordering::Relaxed);
                 }
             }
         },

@@ -341,10 +341,12 @@ impl ObjectTree {
     // XML Output
 
     #[cfg(feature="xml-rs")]
-    pub fn to_xml(&self, path: &::std::path::Path) -> ::xml::writer::Result<()> {
+    pub fn to_xml<P>(&self, path: P)
+    -> ::xml::writer::Result<()>
+    where P: AsRef<::std::path::Path> {
         use xml::writer::events::XmlEvent;
 
-        let mut out = ::xml::EventWriter::new_with_config(::std::fs::File::create(path)?, ::xml::EmitterConfig {
+        let mut out = ::xml::EventWriter::new_with_config(::std::fs::File::create(path.as_ref())?, ::xml::EmitterConfig {
             perform_indent: true,
             .. Default::default()
         });
