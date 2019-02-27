@@ -646,7 +646,7 @@ where
                 t => { self.put_back(t); break; }
             }
             let mut slash_loc = self.location;
-            if let Some(i) = self.ident_in_seq(parts.len())? {
+            if let Some(i) = (dbg!(self.proc_name_in_seq(parts.len())))? {
                 parts.push(i);
             } else {
                 slash_loc.column += 1;
@@ -1611,6 +1611,39 @@ where
             term,
             follow,
         })
+    }
+
+    fn proc_name_in_seq(&mut self, idx: usize) -> Status<Ident> {
+        let iis = self.ident_in_seq(idx);
+        //dbg!(&iis);
+        if let Ok(Some(ident)) = &iis {
+            if ident == "operator" {
+                let mut expected_tokens = vec!["lbracket"];
+                let mut got_so_far = vec![];
+                loop {
+                    let next = self.next("")?;
+                    match next {
+                        Token::Punct(Punctuation::LBracket) if expected_tokens.contains(&"lbracket") => {println!("got lbracket"); got_so_far.push(next); expected_tokens = vec!["rbracket"];}
+                        Token::Punct(Punctuation::RBracket) if expected_tokens.contains(&"rbracket") => {println!("got rbracket"); got_so_far.push(next); expected_tokens = vec!["assign", "end"];}
+                        Token::Punct(Punctuation::Assign) if expected_tokens.contains(&"assign") => {println!("got assign"); got_so_far.push(next); expected_tokens = vec!["end"];}
+                        Token::Punct(Punctuation::LParen) if expected_tokens.contains(&"end") => {
+                            use std::fmt::Write;
+                            println!("got end");
+                            //dbg!(&got_so_far);
+                            self.put_back(next);
+                            let mut final_name = String::with_capacity(8+got_so_far.len());
+                            final_name.push_str("operator");
+                            for t in got_so_far {
+                                write!(final_name, "{}", t).unwrap();
+                            }
+                            return Ok(Some(final_name));
+                        }
+                        token => {self.put_back(dbg!(token)); break;},
+                    }
+                }
+            }
+        }
+        iis
     }
 
     fn term(&mut self, belongs_to: &mut Vec<String>) -> Status<Term> {
